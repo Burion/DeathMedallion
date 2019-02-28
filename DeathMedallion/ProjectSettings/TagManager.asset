@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Enemy
+  - Ambient
   layers:
   - Default
   - TransparentFX
@@ -14,8 +16,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Ground
+  - Hero
   - 
   - 
   - 
@@ -41,4 +43,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: 'Skeleton '
+    uniqueID: 1867356443
+    locked: 0
+  - name: Hero
+    uniqueID: 1390064145
+    locked: 0
+  - name: Ambient
+    uniqueID: 3464725983
+    locked: 0
+  - name: Spider
+    uniqueID: 1723539153
+    locked: 0
+  - name: UI
+    uniqueID: 593962089
     locked: 0
