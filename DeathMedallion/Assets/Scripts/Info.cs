@@ -4,15 +4,16 @@ using UnityEngine;
 
 public static class Info
 {
+    private static int coins;
     public static int Coins
     {
         get
         {
-            return Coins;
+            return coins;
         }
         set
         {
-            Coins = value;
+            coins = value;
         }
     }
 }
