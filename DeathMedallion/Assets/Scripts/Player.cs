@@ -8,7 +8,10 @@ public class Player : Unit {
     float currentjumptime;
 
     void Start () {
+
         base.Start();
+        base.__init__(4f, 4);
+
         jumptimer = 1f;
         Damage = 1;
 
@@ -33,11 +36,11 @@ public class Player : Unit {
     {
         if (Input.GetAxisRaw("Horizontal") == -1)
         {
-            Move(-1, 4f);
+            Move(-1, speed);
         }
         else if (Input.GetAxisRaw("Horizontal") == 1)
         {
-            Move(1, 4f);
+            Move(1, speed);
         }
         else
 

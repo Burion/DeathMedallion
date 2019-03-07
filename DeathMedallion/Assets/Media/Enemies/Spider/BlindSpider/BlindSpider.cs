@@ -13,11 +13,15 @@ public class BlindSpider : Enemy
         base.Start();
         Health = 4;
     }
-    private void Update()
+    new void Update()
     {
         UpdateAnimator();
     }
-    void UpdateAnimator()
+    public override void Wandering()
+    {
+       
+    }
+    public override void UpdateAnimator()
     {
         if (mng.Player.transform.position.x < transform.position.x)
         {

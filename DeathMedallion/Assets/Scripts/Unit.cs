@@ -9,6 +9,9 @@ public interface IUnit
 
 public class Unit : MonoBehaviour {
 
+    public Manager mng;
+    public Vector2 target;
+    public float speed;
     public delegate void Dying();
     public Animator anim;
     public event Dying OnHealthChange;
@@ -28,6 +31,7 @@ public class Unit : MonoBehaviour {
             damage = value;
         }
     }
+    public SpeedManager spdmng;
     public int Health
     {
         get
@@ -46,12 +50,16 @@ public class Unit : MonoBehaviour {
     }
     public int CurrentState { get; set; }
 
-    void __init__()
+    public virtual void __init__(float speed, int dmg)
     {
+        mng = GameObject.Find("Manager").GetComponent<Manager>();
+        this.speed = speed;
+        Damage = dmg;
         anim = gameObject.GetComponentInChildren<Animator>();
         OnHealthChange += new Dying(DeathState);
         rb = gameObject.GetComponent<Rigidbody2D>();
         ableToJump = true;
+        spdmng = new SpeedManager(speed);
     }
     void DeathState()
     {
@@ -72,7 +80,7 @@ public class Unit : MonoBehaviour {
     }
     public void Start ()
     {
-        __init__();
+        __init__(1.2f, 1);
 	}
 	
 
@@ -96,6 +104,44 @@ public class Unit : MonoBehaviour {
     {
         rb.AddForce(new Vector2(100 * dir, 50));
     }
+    public void MovingTowardsTarget(Vector2 trgt)
+    {
+        if (transform.GetChild(0).position.x > trgt.x + 0.5f)
+            Move(-1, speed);
+        else
+            Move(1, speed);
+    }
+    public void MovingTowardsTarget()
+    {
+        if (transform.Find("groundChecker").position.x > target.x + 0.5f)
+            Move(-1, speed);
+        else
+            Move(1, speed);
+    }
+    public Vector2 GetNearest()
+    {
+        return mng.GetNearest(transform.Find("groundChecker").position);
+    }
+}
+public class SpeedManager
+{
+    public float realSpeed;
+    public SpeedManager(float realSpeed)
+    {
+        this.realSpeed = realSpeed;
+    }
 
-
+    public float ChangeSpeed(float delta)
+    {
+        float temp = realSpeed + delta;
+        return temp;
+    }
+    public float SetSpeed(float speed)
+    {
+        return realSpeed = speed;
+    }
+    public float RevertSpeed()
+    {
+        return realSpeed;
+    }
 }

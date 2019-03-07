@@ -10,12 +10,15 @@ public interface IEnemy
 
 public class Enemy: Unit
 {
+    public static System.Random r = new System.Random();
     List<State> states = new List<State>();
     public List<Vector2> bounds;
     public int enemyLevel;
-    public Manager mng;
+
     public event AlarmCons FoundPlayer;
     public delegate void AlarmCons();
+    protected List<Vector2> Bounds;
+    public bool hitable;
 
 
 
@@ -28,7 +31,7 @@ public class Enemy: Unit
 
     private void Awake()
     {
-        mng = GameObject.Find("Manager").GetComponent<Manager>();
+        
         State patrolling = new State("patrolling", 1);
         State chasing = new State("chasing", 2);
         states.Add(patrolling);
@@ -75,14 +78,38 @@ public class Enemy: Unit
         {
             Debug.Log("State with this name doesn't exist");
         }
-        
+        __init__(1, 1);
     }
 
-    void Update()
+    public void Update()
     {
-        
+        UpdateAnimator();
+        switch (CurrentState)
+        {
+            case (int)States.patrolling:
+
+                Wandering();
+                break;
+
+            case (int)States.chasing:
+                Chasing();
+                break;
+
+            case (int)States.combat:
+
+                speed = 0f;
+
+                break;
+
+            case (int)States.death:
+
+                break;
+
+
+
+        }
     }
-    public void StartChasing()
+    public virtual void StartChasing()
     {
         CurrentState = (int)States.chasing;
         FoundPlayer();
@@ -96,5 +123,116 @@ public class Enemy: Unit
         }
         public string name;
         public float speed;
-    } 
+    }
+
+    #region Functions
+    
+    public void SetBounds(int range)
+    {
+        Bounds = mng.GetPlaneVertices(transform.GetChild(0).position, range);
+    }
+    public virtual void StartCombatMode()
+    {
+        CurrentState = (int)States.combat;
+        anim.SetBool("combat", true);
+    }
+    public virtual void UpdateAnimator()
+    {
+
+    }
+    public virtual void Chasing()
+    {
+
+    }
+    public virtual void Wandering()
+    {
+            FixWandering();
+            if (IsOnThePoint())
+            {
+                if (speed > 0)
+                    StartCoroutine("StayWatch", 0.1f);
+            }
+            MovingTowardsTarget();
+
+        Glance();
+    }
+    
+    public bool IsInResponsiveZone()
+    {
+        foreach (Vector2 point in Bounds)
+        {
+            if (mng.GetNearest(gameObject.transform.GetChild(0).position) == point)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public bool IsOnThePoint()
+    {
+        if (mng.GetNearest(transform.GetChild(0).position) == target)
+        {
+            return true;
+        }
+        return false;
+    }
+    public void GetRandomTargetFromBounds()
+    {
+        target = Bounds[r.Next(Bounds.Count)];
+    }
+    public void FixWandering()
+    {
+        bool needToCgange = true;
+        foreach (Vector2 trgt in Bounds)
+        {
+            if (trgt == target)
+            {
+                needToCgange = false;
+                break;
+            }
+        }
+        if (needToCgange)
+        {
+            GetRandomTargetFromBounds();
+        }
+    }
+    public void Glance()
+    {
+        GameObject sighPoint = gameObject.transform.Find("View Point ").gameObject;
+        int x = gameObject.transform.localScale.x > 0 ? -1 : 1;
+        for (float y = -1; y < 1; y += 0.1f)
+        {
+            var hit = Physics2D.Raycast(sighPoint.transform.position, new Vector2(x, y), 10f);
+            if (hit == true)
+            {
+                Debug.Log(hit.transform.tag);
+                if (hit.collider.CompareTag("Player"))
+                {
+                    if (CurrentState != (int)States.chasing)
+                    { 
+                        StartChasing();
+                    }
+                }
+            }
+            Debug.DrawRay(sighPoint.transform.position, new Vector2(x * 10, y * 10), Color.blue);
+        }
+    }
+    #endregion
+
+    #region Corutines
+    IEnumerator StayWatch(float period)
+    {
+        speed = 0f;
+        float timeToWait = r.Next(7);
+        while (timeToWait > 0)
+        {
+            if (CurrentState == (int)States.chasing)
+                break;
+            yield return new WaitForSeconds(period);
+            timeToWait -= period;
+        }
+        speed = 1.2f;
+        GetRandomTargetFromBounds();
+    }
+    #endregion
 }
