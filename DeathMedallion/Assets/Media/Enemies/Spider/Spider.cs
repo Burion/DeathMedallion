@@ -18,7 +18,30 @@ public class Spider : Enemy
         if (!PlayerIsReachable())
         {
             speed = spdmng.RevertSpeed();
-            MovingTowardsTarget(mng.Player.transform.position);
+            if (grounded)
+            {
+                float y1 = mng.GetNearest(transform.GetChild(0).position).y;
+                target = mng.ChasePlayer(gameObject.transform.GetChild(0).gameObject);
+                float y2 = target.y;
+                if (y2 - y1 > 0 && ableToJump)
+                {
+                    if (y2 - y1 < 3)
+                    {
+                        Debug.Log(y2);
+                        rb.velocity = new Vector2(rb.velocity.x, 0);
+                        Jump(270);
+                        StartCoroutine("BlockJump");
+                    }
+
+                    if (Mathf.Abs(y2 - y1) >= 3)
+                    {
+                        CurrentState = (int)States.patrolling;
+                    }
+                }
+
+            }
+            //transform.position = Vector2.MoveTowards(transform.position, target, 0.1f);
+            MovingTowardsTarget();
         }
         else
         {
