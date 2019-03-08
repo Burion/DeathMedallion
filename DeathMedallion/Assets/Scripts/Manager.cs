@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Linq;
+using Newtonsoft.Json;
 
 public class Manager : MonoBehaviour
 { 
@@ -11,6 +12,11 @@ public class Manager : MonoBehaviour
 
     private void Awake()
     {
+        //garbage
+        string jsontest = JsonConvert.SerializeObject(new Vector2(1, 1));
+        Debug.Log(jsontest);
+        //endgarbage
+
         Player = GameObject.Find("Hero");
         MainGraph = new Graph();
     }

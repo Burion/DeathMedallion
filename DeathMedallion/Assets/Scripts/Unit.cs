@@ -17,7 +17,7 @@ public class Unit : MonoBehaviour {
     public event Dying OnHealthChange;
     public Rigidbody2D rb { get; set; }
     int health;
-    public bool grounded;
+    public bool isGrounded;
     public bool ableToJump;
     int damage;
     public int Damage
@@ -48,7 +48,7 @@ public class Unit : MonoBehaviour {
                 
         }
     }
-    public int CurrentState { get; set; }
+    public int currentState { get; set; }
 
     public virtual void __init__(float speed, int dmg)
     {
@@ -76,7 +76,7 @@ public class Unit : MonoBehaviour {
     }
     public void SwitchState(int stateIndex)
     {
-        CurrentState = stateIndex;
+        currentState = stateIndex;
     }
     public void Start ()
     {

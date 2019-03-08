@@ -15,46 +15,19 @@ public class Spider : Enemy
 
     public override void Chasing()
     {
-        if (!PlayerIsReachable())
+        foreach(var coord in Bounds)
         {
-            speed = spdmng.RevertSpeed();
-            if (grounded)
-            {
-                float y1 = mng.GetNearest(transform.GetChild(0).position).y;
-                target = mng.ChasePlayer(gameObject.transform.GetChild(0).gameObject);
-                float y2 = target.y;
-                if (y2 - y1 > 0 && ableToJump)
-                {
-                    if (y2 - y1 < 3)
-                    {
-                        Debug.Log(y2);
-                        rb.velocity = new Vector2(rb.velocity.x, 0);
-                        Jump(270);
-                        StartCoroutine("BlockJump");
-                    }
 
-                    if (Mathf.Abs(y2 - y1) >= 3)
-                    {
-                        CurrentState = (int)States.patrolling;
-                    }
-                }
-
-            }
-            //transform.position = Vector2.MoveTowards(transform.position, target, 0.1f);
-            MovingTowardsTarget();
-        }
-        else
-        {
-            StartCombatMode();
         }
     }
+
     public override void StartChasing()
     {
-        CurrentState = (int)States.chasing;
+        currentState = (int)States.chasing;
     }
     public override void StartCombatMode()
     {
-        CurrentState = (int)States.combat;
+        currentState = (int)States.combat;
         StartCoroutine(Attack());
     }
     #region Functions
@@ -68,6 +41,13 @@ public class Spider : Enemy
                 return true;
             }
         }
+        return false;
+    }
+
+    bool CanHitPlayer()
+    {
+
+        var hit = Physics2D.Raycast(transform.Find("View Point ").transform.position, new Vector2(1, 1), 10f, layermask);
         return false;
     }
     #endregion

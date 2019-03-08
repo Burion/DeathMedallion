@@ -13,14 +13,14 @@ public class GroundChecker : MonoBehaviour
     {
         if (coll.CompareTag("Ground"))
         {
-           thisUnit.grounded = true;
+           thisUnit.isGrounded = true;
         }
     }
     private void OnTriggerExit2D(Collider2D coll)
     {
         if (coll.CompareTag("Ground"))
         {
-            thisUnit.grounded = false;
+            thisUnit.isGrounded = false;
         }
     }
 }

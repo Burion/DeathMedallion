@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public static class GameMath
 {
@@ -10,6 +11,8 @@ public static class GameMath
         //достать текущее здоровье игрока
         //определить на основании этого соотношение, по которому будет отниматься визуальное здоровье
         //изменить реальное здоровье игрока и визуальное
+        
         return res;
+        
     }
 }

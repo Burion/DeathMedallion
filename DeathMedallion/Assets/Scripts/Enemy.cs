@@ -3,35 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public interface IEnemy
-{
-
-}
 
 public class Enemy: Unit
 {
+    public LayerMask layermask;
     public static System.Random r = new System.Random();
     List<State> states = new List<State>();
     public List<Vector2> bounds;
     public int enemyLevel;
-
     public event AlarmCons FoundPlayer;
     public delegate void AlarmCons();
     protected List<Vector2> Bounds;
     public bool hitable;
 
-
-
-
-    private void OnEnable()
-    {
-
-    }
-
-
     private void Awake()
-    {
-        
+    {        
         State patrolling = new State("patrolling", 1);
         State chasing = new State("chasing", 2);
         states.Add(patrolling);
@@ -44,7 +30,7 @@ public class Enemy: Unit
         {
             Debug.Log("State with this name doesn't exist");
         }
-        CurrentState = (int)States.patrolling;
+        currentState = (int)States.patrolling;
 
     }
     State FindState(string name)
@@ -84,7 +70,7 @@ public class Enemy: Unit
     public void Update()
     {
         UpdateAnimator();
-        switch (CurrentState)
+        switch (currentState)
         {
             case (int)States.patrolling:
 
@@ -105,13 +91,15 @@ public class Enemy: Unit
 
                 break;
 
-
-
         }
     }
     public virtual void StartChasing()
     {
-        CurrentState = (int)States.chasing;
+        currentState = (int)States.chasing;
+        anim.Play("walking");
+        speed = spdmng.RevertSpeed();
+        anim.SetTrigger("lostPlayer");
+        anim.SetBool("combat", false);
         FoundPlayer();
     }
     public class State
@@ -133,7 +121,7 @@ public class Enemy: Unit
     }
     public virtual void StartCombatMode()
     {
-        CurrentState = (int)States.combat;
+        currentState = (int)States.combat;
         anim.SetBool("combat", true);
     }
     public virtual void UpdateAnimator()
@@ -146,13 +134,13 @@ public class Enemy: Unit
     }
     public virtual void Wandering()
     {
-            FixWandering();
-            if (IsOnThePoint())
-            {
-                if (speed > 0)
-                    StartCoroutine("StayWatch", 0.1f);
-            }
-            MovingTowardsTarget();
+        FixWandering();
+        if (IsOnThePoint())
+        {
+            if (speed > 0)
+                StartCoroutine("StayWatch", 0.1f);
+        }
+        MovingTowardsTarget();
 
         Glance();
     }
@@ -168,18 +156,17 @@ public class Enemy: Unit
         }
         return false;
     }
+
     public bool IsOnThePoint()
     {
-        if (mng.GetNearest(transform.GetChild(0).position) == target)
-        {
-            return true;
-        }
-        return false;
+        return mng.GetNearest(transform.GetChild(0).position) == target;
     }
+
     public void GetRandomTargetFromBounds()
     {
         target = Bounds[r.Next(Bounds.Count)];
     }
+
     public void FixWandering()
     {
         bool needToCgange = true;
@@ -196,25 +183,26 @@ public class Enemy: Unit
             GetRandomTargetFromBounds();
         }
     }
+
     public void Glance()
     {
         GameObject sighPoint = gameObject.transform.Find("View Point ").gameObject;
         int x = gameObject.transform.localScale.x > 0 ? -1 : 1;
         for (float y = -1; y < 1; y += 0.1f)
         {
-            var hit = Physics2D.Raycast(sighPoint.transform.position, new Vector2(x, y), 10f);
-            if (hit == true)
-            {
-                Debug.Log(hit.transform.tag);
-                if (hit.collider.CompareTag("Player"))
-                {
-                    if (CurrentState != (int)States.chasing)
-                    { 
-                        StartChasing();
-                    }
-                }
-            }
+            var hit = Physics2D.Raycast(sighPoint.transform.position, new Vector2(x, y), 10f, layermask);
             Debug.DrawRay(sighPoint.transform.position, new Vector2(x * 10, y * 10), Color.blue);
+            if (!hit)
+            {
+                continue;
+            }
+            Debug.Log(hit.transform.tag);
+
+            if (hit.collider.CompareTag("Player") && currentState != (int)States.chasing)
+            {
+                StartChasing();
+            }
+            
         }
     }
     #endregion
@@ -226,7 +214,7 @@ public class Enemy: Unit
         float timeToWait = r.Next(7);
         while (timeToWait > 0)
         {
-            if (CurrentState == (int)States.chasing)
+            if (currentState == (int)States.chasing)
                 break;
             yield return new WaitForSeconds(period);
             timeToWait -= period;

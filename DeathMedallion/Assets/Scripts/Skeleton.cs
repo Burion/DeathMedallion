@@ -1,30 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using System;
+
+//2 ot
 public class Skeleton : Enemy
 {
-    
-
-
-
+    //1 ot
     public delegate void ReachPlayer();
 
     event ReachPlayer ReachingPlayer;
     Animation additonAnim;
-
-    
     //Death Objects
     [SerializeField] List<GameObject> bodyParts;
     [SerializeField] List<GameObject> deadBodyParts;
     
     void Start()
     {
-        __init__();
+        Initialize();
     }
 
-    void __init__()
+    void Initialize()
     {
         base.Start();
         speed = 1.2f;
@@ -38,7 +33,7 @@ public class Skeleton : Enemy
     public override void UpdateAnimator()
     {
         base.UpdateAnimator();
-        anim.SetBool("grounded", grounded);
+        anim.SetBool("grounded", isGrounded);
         anim.SetFloat("speed", speed);
         anim.SetFloat("velocityY", rb.velocity.y);
     }
@@ -46,26 +41,26 @@ public class Skeleton : Enemy
     /// <summary>
     /// chasing the player accoor
     /// </summary>
-    public override void Chasing()
+    public override void Chasing() //tripple nested
     {
-        if (grounded)
+        if (isGrounded)
         {
             float y1 = mng.GetNearest(transform.GetChild(0).position).y;
             target = mng.ChasePlayer(gameObject.transform.GetChild(0).gameObject);
             float y2 = target.y;
             if (y2 - y1 > 0 && ableToJump)
             {
-                if (y2 - y1 < 3)
+                if (y2 - y1 < 3)//magic number
                 {
                     Debug.Log(y2);
                     rb.velocity = new Vector2(rb.velocity.x, 0);
-                    Jump(270);
+                    Jump(270);//height -||-
                     StartCoroutine("BlockJump");
                 }
 
-                if (Mathf.Abs(y2 - y1) >= 3)
+                if (Mathf.Abs(y2 - y1) >= 3)// -||-
                 {
-                    CurrentState = (int)States.patrolling;
+                    currentState = (int)States.patrolling;
                 }
             }
 
@@ -73,7 +68,7 @@ public class Skeleton : Enemy
         //transform.position = Vector2.MoveTowards(transform.position, target, 0.1f);
         MovingTowardsTarget();
 
-        if (NearThePlayer())
+        if (IsNearThePlayer())
         {
             ReachingPlayer(); //событие, которое переводит бота в режим сражение
         }
@@ -83,17 +78,16 @@ public class Skeleton : Enemy
 
     public override void Wandering()
     {
-
         if (!IsInResponsiveZone())
         {
-            if (grounded)
+            if (isGrounded)
             {
                 Vector2 oldPos = GetNearest();
                 target = mng.ChasePoint(gameObject.transform.GetChild(0).gameObject, Bounds[Bounds.Count / 2]);
 
                 if (Mathf.Abs(target.y - oldPos.y) > 0 && ableToJump)
                 {
-                    if (AbleToReach(target.y, oldPos.y))
+                    if (IsAbleToReach(target.y, oldPos.y))
                     {
                         Debug.Log(target.y);
                         rb.velocity = new Vector2(rb.velocity.x, 0);
@@ -126,13 +120,9 @@ public class Skeleton : Enemy
         
     }
 
-    bool AbleToReach(float y1, float y2)
+    bool IsAbleToReach(float y1, float y2)
     {
-        if (y1 - y2 > 0 && y1 - y2 < 3 && ableToJump)
-        {
-            return true;
-        }
-        return false;
+        return (y1 - y2 > 0 && y1 - y2 < 3 && ableToJump);
     }
     
     void StopMoving()
@@ -140,16 +130,16 @@ public class Skeleton : Enemy
         rb.velocity = new Vector2(0, rb.velocity.y);
         speed = 0f;
     }
+
     void ShowAlarm()
     {
         gameObject.transform.GetChild(2).gameObject.SetActive(true);
     }
+
     void StopChasing()
     {
-        CurrentState = (int)States.patrolling;
+        currentState = (int)States.patrolling;
     }
-
-
 
     public override void StartCombatMode()
     {
@@ -160,7 +150,11 @@ public class Skeleton : Enemy
 
     void CheckCombatState()
     {
-        if (CurrentState != (int)States.death)
+        if (currentState == (int)States.death)
+        {
+            return;
+        }
+        if (IsNearThePlayer())
         {
             if (CanHitPlayer())
             {
@@ -171,10 +165,15 @@ public class Skeleton : Enemy
                 StartCoroutine(Dash());
             }
         }
+        else
+        {
+            StartChasing();
+        }
     }
+
     public override void GotHit(int dir)
     {
-        if (hitable == false)
+        if (!hitable)
         {
             anim.Play("pair");
             //anim.SetTrigger("pair");
@@ -192,13 +191,11 @@ public class Skeleton : Enemy
         }
     }
 
-    
-
-    bool NearThePlayer()
+    bool IsNearThePlayer()
     {
-        List<Vector2> Testplane = mng.GetPlaneVertices(gameObject.transform.GetChild(0).position, 6);
+        List<Vector2> testplane = mng.GetPlaneVertices(gameObject.transform.GetChild(0).position, 6);
         Vector2 playerPos = mng.GetNearest(mng.Player.transform.position);
-        foreach (Vector2 pos in Testplane)
+        foreach (Vector2 pos in testplane)
         {
             if (playerPos == pos)
             {
@@ -211,7 +208,7 @@ public class Skeleton : Enemy
 
     bool CanHitPlayer()
     {
-        return Vector2.Distance(transform.position, mng.Player.transform.position) < 2 ? true : false;
+        return Vector2.Distance(transform.position, mng.Player.transform.position) < 2;
     }
 
     #region Animations Methods
@@ -219,10 +216,12 @@ public class Skeleton : Enemy
     {
         hitable = value;
     }
+
     public void HitableTrue()
     {
         SetHittable(true);
     }
+
     public void HitableFalse()
     {
         SetHittable(false);
@@ -243,11 +242,13 @@ public class Skeleton : Enemy
         yield return new WaitForSeconds(r.Next(2, 8) * 0.5f);
         CheckCombatState();
     }
+
     IEnumerator WaitToSetSpeedZero()
     {
-        yield return new WaitUntil(() => grounded == true);
+        yield return new WaitUntil(() => isGrounded);
         rb.velocity = new Vector2(0, 0);
     }
+
     IEnumerator Dash()
     {
         speed = 3;
@@ -256,15 +257,17 @@ public class Skeleton : Enemy
         StopMoving();
         StartCoroutine(DefenceMode());
     }
+
     IEnumerator Attack()
     {
         anim.SetBool("attacking", true);
         yield return new WaitForSeconds(1);
         Debug.Log("Hit!");
         anim.SetBool("attacking", false);
-        yield return new WaitForSeconds(1); //TODO create attack logic
+        yield return new WaitForSeconds(1);
         CheckCombatState();
     }
+
     IEnumerator FreezeTime(float time)
     {
         Time.timeScale = 0f;

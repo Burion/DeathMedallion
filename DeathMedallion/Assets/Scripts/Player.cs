@@ -64,6 +64,6 @@ public class Player : Unit {
     {
         anim.SetFloat("velocityX", Mathf.Abs(rb.velocity.x));
         anim.SetFloat("velocityY", rb.velocity.y);
-        anim.SetBool("grounded", grounded);
+        anim.SetBool("grounded", isGrounded);
     }
 }
