@@ -9,6 +9,7 @@ public interface IUnit
 
 public class Unit : MonoBehaviour {
 
+    public bool hitable;
     public Manager mng;
     public Vector2 target;
     public float speed;
@@ -101,6 +102,11 @@ public class Unit : MonoBehaviour {
         anim.Play("gethit");
         Health -= 1;
         GetRecoil(dir);
+    }
+    public virtual void GotHit()
+    {
+        anim.Play("gethit");
+        Health -= 1;
     }
     public void GetRecoil(float dir)
     {

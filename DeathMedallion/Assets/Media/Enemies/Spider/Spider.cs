@@ -47,6 +47,7 @@ public class Spider : Enemy
                 if (hit.collider.CompareTag("Player") && currentState != (int)States.chasing)
                 {
                     StartCombatMode();
+                    break;
                 }
         }
     }
@@ -107,6 +108,10 @@ public class Spider : Enemy
         else
         {
             currentState = (int)States.patrolling;
+            if (!IsInResponsiveZone())
+            {
+                SetBounds(6);
+            }
             speed = spdmng.RevertSpeed();
         }
     }

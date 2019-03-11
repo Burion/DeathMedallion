@@ -14,7 +14,6 @@ public class Enemy: Unit
     public event AlarmCons FoundPlayer;
     public delegate void AlarmCons();
     protected List<Vector2> Bounds;
-    public bool hitable;
 
     private void Awake()
     {        

@@ -3,19 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class NoteMenu : MonoBehaviour
+public class NoteMenu : Menu
 {
     [SerializeField] GameObject notePrefab;
     [SerializeField] GameObject scrollView;
     [SerializeField] TextMeshProUGUI mainText;
-    public int currentPosInt;
 
     private void OnEnable()
     {
-        if (scrollView.transform.childCount < 1)
-            return;
-        
-        currentPosInt = 0;
+        foreach (Note note in NoteHendler.notes)
+        {
+            var instaNote = Instantiate(notePrefab, scrollView.transform);
+            instaNote.GetComponent<NotePrefab>().InitNote(note.Name, note.Text);
+            //"L" + note.Level.ToString() + "-" + note.No.ToString()
+        }
+        OnNoteChange();
+        StartCoroutine("Blink");
+        choice = new CircleInt(0, scrollView.transform.childCount);
+        Debug.Log(choice.MaxValue);
+
     }
 
     private void Update()
@@ -25,41 +31,29 @@ public class NoteMenu : MonoBehaviour
 
     void CheckForPressing()
     {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            OpenMenu(transform.parent.Find("Pause").gameObject);
+        }
         if (Input.GetKeyDown(KeyCode.D))
         {
-            if (currentPosInt != scrollView.transform.childCount - 1)
-                currentPosInt++;
-            else
-                currentPosInt = 0;
+            choice++;
             OnNoteChange();
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            if(currentPosInt < scrollView.transform.childCount - scrollView.GetComponent<GridLayoutGroup>().constraintCount)
-            {
-                currentPosInt += scrollView.GetComponent<GridLayoutGroup>().constraintCount;
-                
-            }
-            else
-                currentPosInt = scrollView.transform.childCount - 1;
+            choice += scrollView.GetComponent<GridLayoutGroup>().constraintCount;
             OnNoteChange();
         }
     }
     void Start()
     {
-        foreach(Note note in NoteHendler.notes)
-        {
-            var instaNote = Instantiate(notePrefab, scrollView.transform);
-            instaNote.GetComponent<NotePrefab>().InitNote(note.Name, note.Text);
-            //"L" + note.Level.ToString() + "-" + note.No.ToString()
-        }
-        OnNoteChange();
-        StartCoroutine("Blink");
+        
     }
 
     void OnNoteChange()
     {
-        mainText.text = scrollView.transform.GetChild(currentPosInt).GetComponent<NotePrefab>().text;
+        mainText.text = scrollView.transform.GetChild(choice).GetComponent<NotePrefab>().text;
         StopCoroutine("Blink");
         for (int i = 0; i < scrollView.transform.childCount; i++)
         {
@@ -69,7 +63,7 @@ public class NoteMenu : MonoBehaviour
     }
     IEnumerator Blink()
     {
-        var currentNote = scrollView.transform.GetChild(currentPosInt).GetComponent<Image>();
+        var currentNote = scrollView.transform.GetChild(choice).GetComponent<Image>();
         int alpha = 255;
         while (alpha > 155)
         {
@@ -85,5 +79,6 @@ public class NoteMenu : MonoBehaviour
         }
         StartCoroutine("Blink");
     }
+    
 
 }

@@ -13,5 +13,10 @@ public class ThrowingWeb : MonoBehaviour
             Instantiate(groundWeb, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
+        if (col.CompareTag("Player"))
+        {
+            col.SendMessage("GotHit");
+            Destroy(gameObject);
+        }
     }
 }

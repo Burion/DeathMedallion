@@ -6,6 +6,7 @@ public class Melee : MonoBehaviour
 {
     Player player;
     public GameObject hitPrefab;
+    System.Random rand = new System.Random();
     private void Start()
     {
         player = GetComponentInParent<Player>();
@@ -30,6 +31,12 @@ public class Melee : MonoBehaviour
                 }
                 col.GetComponent<AmbientThing>().GetHit();
                 
+                
+                break;
+
+            case "Shell":
+                col.GetComponent<Rigidbody2D>().velocity = new Vector2(-col.GetComponent<Rigidbody2D>().velocity.x, rand.Next(-10, 100)*0.1f);
+               
                 break;
         }
     }

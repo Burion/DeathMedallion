@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Anima2D;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,8 @@ public class Player : Unit {
 
     float jumptimer;
     float currentjumptime;
-
+    [SerializeField] SpriteMeshInstance eyes;
+    [SerializeField] SpriteRenderer sword;
     void Start () {
 
         base.Start();
@@ -56,9 +58,12 @@ public class Player : Unit {
         {
             anim.SetTrigger("attack");
         }
-        
-            
- 
+         
+    }
+    public override void GotHit()
+    {
+        base.GotHit();
+        StartCoroutine(StayUnhittable(2f));
     }
     void UpdateAnimator()
     {
@@ -66,4 +71,38 @@ public class Player : Unit {
         anim.SetFloat("velocityY", rb.velocity.y);
         anim.SetBool("grounded", isGrounded);
     }
+
+    #region Corutines
+    IEnumerator StayUnhittable(float time)
+    {
+        float interval = 0.3f;
+        var body = transform.Find("Model").Find("Sprite Meshes");
+        List<SpriteMeshInstance> bodyparts = new List<SpriteMeshInstance>();
+        SpriteMeshInstance[] bodyParts = body.GetComponentsInChildren<SpriteMeshInstance>();
+        foreach(SpriteMeshInstance part in bodyParts)
+        {
+            bodyparts.Add(part);
+        }
+        bodyparts.Add(eyes);
+        if (bodyParts == null) throw new System.NullReferenceException("Bounds are Empty");
+        while (time > 0)
+        {
+
+            foreach(SpriteMeshInstance part in bodyparts)
+            {
+                part.color = new Color32(255, 255, 255, 100);
+                sword.color = new Color32(255, 255, 255, 100);
+            }
+            yield return new WaitForSeconds(interval);
+
+            foreach (SpriteMeshInstance part in bodyparts)
+            {
+                part.color = Color.white;
+                sword.color = Color.white;
+            }
+            yield return new WaitForSeconds(interval);
+            time -= interval * 2;
+        }
+    }
+    #endregion
 }

@@ -24,12 +24,12 @@ public class Manager : MonoBehaviour
         {
             if (Pause.active == false)
             {
-                Time.timeScale = 0f;
+                Service.SetGame(false);
                 Pause.SetActive(true);
             }
             else
             {
-                Time.timeScale = 1f;
+                Service.SetGame(true);
                 Pause.SetActive(false);
             }
         }
