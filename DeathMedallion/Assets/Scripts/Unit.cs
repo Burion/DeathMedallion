@@ -86,9 +86,11 @@ public class Unit : MonoBehaviour {
 
     public void Move(int dir, float speed)
     {
-        rb.velocity = new Vector2(dir*speed, rb.velocity.y);
-        transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x) * dir, transform.localScale.y, transform.localScale.z);
-
+        if (Time.timeScale != 0)
+        {
+            rb.velocity = new Vector2(dir * speed, rb.velocity.y);
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x) * dir, transform.localScale.y, transform.localScale.z);
+        }
     }
     public void Jump(float power)
     {

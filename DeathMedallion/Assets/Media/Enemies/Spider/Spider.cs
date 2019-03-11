@@ -12,13 +12,14 @@ public class Spider : Enemy
         base.__init__(speed, dmg);
         SetBounds(6);
     }
-
+    private void Start()
+    {
+        __init__(1.2f, 2);
+        Health = 4;
+    }
     public override void Chasing()
     {
-        foreach(var coord in Bounds)
-        {
 
-        }
     }
 
     public override void StartChasing()
@@ -31,6 +32,45 @@ public class Spider : Enemy
         StartCoroutine(Attack());
     }
     #region Functions
+    public override void Glance()
+    {
+        GameObject sighPoint = transform.Find("View Point ").gameObject;
+        float x = 1;
+        float y;
+        for (; x > -1; x -= 0.01f)
+        {
+            y = 1 - Mathf.Abs(x);
+            var hit = Physics2D.Raycast(sighPoint.transform.position, new Vector2(x, y), 10f, layermask);
+            Debug.DrawRay(sighPoint.transform.position, new Vector2(x, y) * 10, Color.blue);
+
+            if (hit)
+                if (hit.collider.CompareTag("Player") && currentState != (int)States.chasing)
+                {
+                    StartCombatMode();
+                }
+        }
+    }
+
+    public bool PlayerIsVisible()
+    {
+        GameObject sighPoint = transform.Find("View Point ").gameObject;
+        float x = 1;
+        float y;
+        for (; x > -1; x -= 0.01f)
+        {
+            y = 1 - Mathf.Abs(x);
+            var hit = Physics2D.Raycast(sighPoint.transform.position, new Vector2(x, y), 10f, layermask);
+            Debug.DrawRay(sighPoint.transform.position, new Vector2(x, y) * 10, Color.blue);
+
+            if (hit)
+                if (hit.collider.CompareTag("Player") && currentState != (int)States.chasing)
+                {
+                    return true;
+                }
+        }
+        return false;
+    }
+    
     bool PlayerIsReachable()
     {
         List<Vector2> Plane = mng.GetPlaneVertices(gameObject.transform.Find("groundChecker").position, 4);
@@ -59,13 +99,15 @@ public class Spider : Enemy
 
         Ball.GetComponent<Rigidbody2D>().AddForce(-dir.normalized*500);
         yield return new WaitForSeconds(3);
-        if (PlayerIsReachable())
+
+        if (PlayerIsVisible())
         {
             StartCoroutine(Attack());
         }
         else
         {
-            StartChasing();
+            currentState = (int)States.patrolling;
+            speed = spdmng.RevertSpeed();
         }
     }
     

@@ -184,7 +184,7 @@ public class Enemy: Unit
         }
     }
 
-    public void Glance()
+    public virtual void Glance()
     {
         GameObject sighPoint = gameObject.transform.Find("View Point ").gameObject;
         int x = gameObject.transform.localScale.x > 0 ? -1 : 1;
@@ -196,7 +196,7 @@ public class Enemy: Unit
             {
                 continue;
             }
-            Debug.Log(hit.transform.tag);
+            
 
             if (hit.collider.CompareTag("Player") && currentState != (int)States.chasing)
             {

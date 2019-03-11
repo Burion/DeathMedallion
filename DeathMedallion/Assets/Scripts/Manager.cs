@@ -7,9 +7,33 @@ using Newtonsoft.Json;
 using System.IO;
 
 public class Manager : MonoBehaviour
-{ 
+{
+    public GameObject Pause;
     Graph MainGraph;
-    public GameObject Player;  
+    public GameObject Player;
+
+
+    public void Update()
+    {
+        ReadKeys();
+    }
+
+    void ReadKeys()
+    {
+        if (Input.GetButtonDown("Pause"))
+        {
+            if (Pause.active == false)
+            {
+                Time.timeScale = 0f;
+                Pause.SetActive(true);
+            }
+            else
+            {
+                Time.timeScale = 1f;
+                Pause.SetActive(false);
+            }
+        }
+    }
 
     private void Awake()
     {

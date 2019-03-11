@@ -12,7 +12,7 @@ public class NoteMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        if (scrollView.transform.GetChildCount() < 1)
+        if (scrollView.transform.childCount < 1)
             return;
         
         currentPosInt = 0;
@@ -20,19 +20,30 @@ public class NoteMenu : MonoBehaviour
 
     private void Update()
     {
+        CheckForPressing();
+    }
+
+    void CheckForPressing()
+    {
         if (Input.GetKeyDown(KeyCode.D))
         {
-            if (currentPosInt != scrollView.transform.GetChildCount() - 1)
+            if (currentPosInt != scrollView.transform.childCount - 1)
                 currentPosInt++;
             else
                 currentPosInt = 0;
             OnNoteChange();
         }
-    }
-
-    void CheckForPressing()
-    {
-        //pressLogic
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            if(currentPosInt < scrollView.transform.childCount - scrollView.GetComponent<GridLayoutGroup>().constraintCount)
+            {
+                currentPosInt += scrollView.GetComponent<GridLayoutGroup>().constraintCount;
+                
+            }
+            else
+                currentPosInt = scrollView.transform.childCount - 1;
+            OnNoteChange();
+        }
     }
     void Start()
     {
