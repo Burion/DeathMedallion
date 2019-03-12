@@ -9,6 +9,8 @@ public interface IUnit
 
 public class Unit : MonoBehaviour {
 
+
+    public bool doubleJmp = true;
     public bool hitable;
     public Manager mng;
     public Vector2 target;

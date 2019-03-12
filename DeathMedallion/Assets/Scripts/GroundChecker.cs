@@ -14,6 +14,7 @@ public class GroundChecker : MonoBehaviour
         if (coll.CompareTag("Ground"))
         {
            thisUnit.isGrounded = true;
+           thisUnit.doubleJmp = true;
         }
     }
     private void OnTriggerExit2D(Collider2D coll)

@@ -5,10 +5,12 @@ using UnityEngine;
 
 public class Player : Unit {
 
+    public bool godMode = false;
     float jumptimer;
     float currentjumptime;
     [SerializeField] SpriteMeshInstance eyes;
     [SerializeField] SpriteRenderer sword;
+
     void Start () {
 
         base.Start();
@@ -21,9 +23,13 @@ public class Player : Unit {
 	
 
 	void Update () {
-        
-        CheckMove();
-        UpdateAnimator();
+
+        if (Info.IsGameOn)
+        {
+            GodMode();
+            CheckMove();
+            UpdateAnimator();
+        }
 
         for (int i = 0; i < 20; i++)
         {
@@ -50,8 +56,13 @@ public class Player : Unit {
 
         if (Input.GetButtonDown("Jump"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, 0);
-            Jump(400);
+            if ((doubleJmp == true && !isGrounded) || isGrounded)
+            {
+                if(!isGrounded)
+                doubleJmp = false;
+                rb.velocity = new Vector2(rb.velocity.x, 0);
+                Jump(400);
+            }
         }
         
         if (Input.GetButtonDown("Attack"))
@@ -72,6 +83,18 @@ public class Player : Unit {
         anim.SetBool("grounded", isGrounded);
     }
 
+    public void SetGodMode(bool choice)
+    {
+        godMode = choice;   
+    }
+    void GodMode()
+    {
+        if (godMode)
+        {
+            doubleJmp = true;
+            Health = int.MaxValue;
+        }
+    }
     #region Corutines
     IEnumerator StayUnhittable(float time)
     {

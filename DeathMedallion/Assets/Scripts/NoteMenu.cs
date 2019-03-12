@@ -3,56 +3,92 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class NoteMenu : Menu
+public class NoteMenu : Menu, IMenu
 {
     [SerializeField] GameObject notePrefab;
     [SerializeField] GameObject scrollView;
     [SerializeField] TextMeshProUGUI mainText;
+    public static bool wasOpened = false;
 
     private void OnEnable()
     {
-        foreach (Note note in NoteHendler.notes)
+        if (!wasOpened)
         {
-            var instaNote = Instantiate(notePrefab, scrollView.transform);
-            instaNote.GetComponent<NotePrefab>().InitNote(note.Name, note.Text);
-            //"L" + note.Level.ToString() + "-" + note.No.ToString()
+            foreach (Note note in NoteHendler.notes)
+            {
+                var instaNote = Instantiate(notePrefab, scrollView.transform);
+                instaNote.GetComponent<NotePrefab>().InitNote(note.Name, note.Text);
+            }
         }
+        wasOpened = true;
+        currentMenu = Notes;
+
+        choice = new CircleInt(0, currentMenu.Grid.transform.childCount);
+        
+
         OnNoteChange();
         StartCoroutine("Blink");
         choice = new CircleInt(0, scrollView.transform.childCount);
         Debug.Log(choice.MaxValue);
 
     }
+    void ClearNotes()
+    {
+        foreach(Transform trans in scrollView.transform)
+        {
+            Destroy(trans.gameObject);
+        }
+    }
 
     private void Update()
     {
+        Debug.Log(Input.GetAxisRaw("UpDown"));
         CheckForPressing();
     }
 
-    void CheckForPressing()
+    public void CheckForPressing()
     {
         if (Input.GetButtonDown("Cancel"))
         {
-            OpenMenu(transform.parent.Find("Pause").gameObject);
+            StopCoroutine("Blink");
+            OpenMenu(Pause);
+           
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        if (!pressed)
         {
-            choice++;
-            OnNoteChange();
+            if (Input.GetAxisRaw("Horizontal") == 1)
+            {
+                choice++;
+                OnNoteChange();
+            }
+            if (Input.GetAxisRaw("Horizontal") == -1)
+            {
+                choice--;
+                OnNoteChange();
+            }
+            if (Input.GetAxisRaw("UpDown") == -1)
+            {
+                choice += scrollView.GetComponent<GridLayoutGroup>().constraintCount;
+                OnNoteChange();
+            }
+            if (Input.GetAxisRaw("UpDown") == 1)
+            {
+                choice -= scrollView.GetComponent<GridLayoutGroup>().constraintCount;
+                OnNoteChange();
+            }
         }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            choice += scrollView.GetComponent<GridLayoutGroup>().constraintCount;
-            OnNoteChange();
-        }
+        FixPressing();
     }
     void Start()
     {
         
     }
 
+
+    
     void OnNoteChange()
     {
+        pressed = true;
         mainText.text = scrollView.transform.GetChild(choice).GetComponent<NotePrefab>().text;
         StopCoroutine("Blink");
         for (int i = 0; i < scrollView.transform.childCount; i++)

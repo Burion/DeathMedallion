@@ -17,6 +17,7 @@ public class Skeleton : Enemy
     void Start()
     {
         Initialize();
+        Physics2D.IgnoreCollision(transform.Find("Collider").GetComponent<Collider2D>(), mng.Player.GetComponent<Collider2D>());
     }
 
     void Initialize()

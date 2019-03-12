@@ -16,7 +16,9 @@ public class Enemy: Unit
     protected List<Vector2> Bounds;
 
     private void Awake()
-    {        
+    {
+
+        
         State patrolling = new State("patrolling", 1);
         State chasing = new State("chasing", 2);
         states.Add(patrolling);
