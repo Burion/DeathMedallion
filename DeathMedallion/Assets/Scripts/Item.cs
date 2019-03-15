@@ -6,13 +6,12 @@ public class Item<T> : MonoBehaviour
 {
     //properties
     public int coins;
-
+    public int No;
     public delegate void TakenDelegate(); //set of methods that are calld when item is taken
     public event TakenDelegate OnTaken; //enent that occures when item is taken
 
     private void OnEnable()
     {
-        
     }
     public virtual void OnTriggerEnter2D(Collider2D col)
     {
@@ -32,9 +31,9 @@ public class Item<T> : MonoBehaviour
     {
 
     }
-    public void AddNote(T note)
+    public void AddNote()
     {
-
+        NoteHendler.availableNotes.Add(NoteHendler.GetNote(No));
     }
     #endregion
 }

@@ -8,12 +8,22 @@ using Unity;
 public static class NoteHendler
 {
     public static List<Note> notes;
+    public static List<Note> availableNotes = new List<Note>();
     public static GameObject scrollView;
+
+    public static List<Note> AvailableNotes
+    {
+        get
+        {
+            availableNotes.Sort();
+            return availableNotes;
+        }
+    }
+
     static NoteHendler()
     {
         notes = JsonConvert.DeserializeObject<List<Note>>(System.IO.File.ReadAllText(@"e:\notes.json"));
         scrollView = GameObject.Find("ScrollNotes");
-
     }
 
 
@@ -28,5 +38,18 @@ public static class NoteHendler
     public static void AddNote(Note note)
     {
         notes.Add(note);
+    }
+    public static Note GetNote(int x)
+    {
+        
+        foreach (Note note in notes)
+        {
+            if(note.No == x)
+            {
+                return note;
+            }
+        }
+        throw new Exception("There is no note with this number");
+        
     }
 }

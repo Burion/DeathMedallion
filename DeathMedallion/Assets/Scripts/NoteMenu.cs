@@ -8,35 +8,17 @@ public class NoteMenu : Menu, IMenu
     [SerializeField] GameObject notePrefab;
     [SerializeField] GameObject scrollView;
     [SerializeField] TextMeshProUGUI mainText;
-    public static bool wasOpened = false;
 
     private void OnEnable()
     {
-        if (!wasOpened)
-        {
-            foreach (Note note in NoteHendler.notes)
-            {
-                var instaNote = Instantiate(notePrefab, scrollView.transform);
-                instaNote.GetComponent<NotePrefab>().InitNote(note.Name, note.Text);
-            }
-        }
-        wasOpened = true;
-        currentMenu = Notes;
-
-        choice = new CircleInt(0, currentMenu.Grid.transform.childCount);
-        
-
-        OnNoteChange();
-        StartCoroutine("Blink");
-        choice = new CircleInt(0, scrollView.transform.childCount);
-        Debug.Log(choice.MaxValue);
-
+        StartCoroutine(Init());
     }
     void ClearNotes()
     {
-        foreach(Transform trans in scrollView.transform)
+
+        for (var i = scrollView.transform.childCount - 1; i >= 0; i--)
         {
-            Destroy(trans.gameObject);
+            Destroy(scrollView.transform.GetChild(i).gameObject);
         }
     }
 
@@ -51,6 +33,7 @@ public class NoteMenu : Menu, IMenu
         if (Input.GetButtonDown("Cancel"))
         {
             StopCoroutine("Blink");
+            Debug.Log("Pause is opened");
             OpenMenu(Pause);
            
         }
@@ -88,14 +71,18 @@ public class NoteMenu : Menu, IMenu
     
     void OnNoteChange()
     {
+        if (scrollView.transform.childCount == 0) return;
         pressed = true;
         mainText.text = scrollView.transform.GetChild(choice).GetComponent<NotePrefab>().text;
-        StopCoroutine("Blink");
+        //StopCoroutine("Blink");
         for (int i = 0; i < scrollView.transform.childCount; i++)
         {
             scrollView.transform.GetChild(i).GetComponent<Image>().color = new Color32(255, 255, 255, 255);
         }
-        StartCoroutine("Blink");
+        scrollView.transform.GetChild(choice).GetComponent<Image>().color = new Color32(255, 255, 100, 255);
+        Debug.Log("OnNoteChange");
+        //StartCoroutine("Blink");
+        
     }
     IEnumerator Blink()
     {
@@ -115,6 +102,23 @@ public class NoteMenu : Menu, IMenu
         }
         StartCoroutine("Blink");
     }
+    IEnumerator Init()
+    {
+        ClearNotes();
+        Time.timeScale = 1f;
+        yield return new WaitForEndOfFrame();
+        Time.timeScale = 0f;
+        foreach (Note note in NoteHendler.AvailableNotes)
+        {
+            var instaNote = Instantiate(notePrefab, scrollView.transform);
+            instaNote.GetComponent<NotePrefab>().InitNote(note.Name, note.Text);
+        }
+        currentMenu = Notes;
+        choice = new CircleInt(0, currentMenu.Grid.transform.childCount);
+        OnNoteChange();
+        choice = new CircleInt(0, scrollView.transform.childCount);
+
+    } 
     
 
 }

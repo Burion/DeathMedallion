@@ -14,11 +14,13 @@ public class Enemy: Unit
     public event AlarmCons FoundPlayer;
     public delegate void AlarmCons();
     protected List<Vector2> Bounds;
+    [SerializeField] public GameObject pair;
 
     private void Awake()
     {
 
-        
+        Collider2D col = new Collider2D();
+        Physics2D.IgnoreLayerCollision(10, 10);
         State patrolling = new State("patrolling", 1);
         State chasing = new State("chasing", 2);
         states.Add(patrolling);
@@ -83,7 +85,7 @@ public class Enemy: Unit
                 break;
 
             case (int)States.combat:
-
+                transform.localScale = new Vector2(mng.Player.transform.position.x > transform.position.x ? -Math.Abs(transform.localScale.x) : Math.Abs(transform.localScale.x), transform.localScale.y);
                 speed = 0f;
 
                 break;

@@ -79,6 +79,7 @@ public class Skeleton : Enemy
 
     public override void Wandering()
     {
+        hitable = true;
         if (!IsInResponsiveZone())
         {
             if (isGrounded)
@@ -145,6 +146,7 @@ public class Skeleton : Enemy
     public override void StartCombatMode()
     {
         base.StartCombatMode();
+        hitable = false;
         StartCoroutine("WaitToSetSpeedZero");
         StartCoroutine("Dash");
     }
@@ -174,9 +176,11 @@ public class Skeleton : Enemy
 
     public override void GotHit(int dir)
     {
+
         if (!hitable)
         {
             anim.Play("pair");
+            Instantiate(pair, transform.Find("View Point ").transform.position, Quaternion.identity);
             //anim.SetTrigger("pair");
             //StartCoroutine(FreezeTime(0.1f));
             //GetRecoil(dir);
@@ -189,6 +193,10 @@ public class Skeleton : Enemy
             anim.Play("gothit");
             GetRecoil(dir);
             Health--;
+        }
+        if (currentState == (int)States.patrolling)
+        {
+            StartCombatMode();
         }
     }
 

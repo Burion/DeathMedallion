@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class Note
+public class Note: IComparable
 {
     public Note(string name, int level, int no, string text)
     {
@@ -59,5 +60,11 @@ public class Note
         {
             text = value;
         }
+    }
+
+    public int CompareTo(object obj)
+    {
+        Note note = obj as Note;
+        return Level.CompareTo(note.Level);
     }
 }

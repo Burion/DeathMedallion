@@ -13,6 +13,11 @@ public class PauseMenu : Menu, IMenu
         currentMenu = Pause;
         choice.CurrentValue = 0;
         OnChoiceChange();
+        if(GameObject.Find("note_indicator") != null)
+        {
+            OpenMenu(Notes);
+            GameObject.Find("note_indicator").SetActive(false);
+        }
     }
 
 

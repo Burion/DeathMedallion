@@ -37,5 +37,9 @@ public class AnimationEventController : MonoBehaviour
         Debug.Log("UnHittable");
         parent.HitableFalse();
     }
+    public void HideHitCollider()
+    {
+        parent.GetComponent<Collider2D>().enabled = false;
+    }
     #endregion
 }

@@ -17,7 +17,7 @@ public static class Service
     public static void SetGame(bool choice)
     {
         Time.timeScale = choice? 1f : 0f;
-
+        Info.IsGameOn = choice;
     }
 
 }
