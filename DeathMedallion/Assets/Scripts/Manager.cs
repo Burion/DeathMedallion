@@ -8,6 +8,8 @@ using System.IO;
 
 public class Manager : MonoBehaviour
 {
+    public delegate void OnLevelUp();
+    public event OnLevelUp UpLevel;
     public GameObject Pause;
     Graph MainGraph;
     public GameObject Player;
@@ -20,6 +22,8 @@ public class Manager : MonoBehaviour
 
     void ReadKeys()
     {
+        //
+        //
         if (Input.GetButtonDown("Pause"))
         {
             if (Pause.active == false)
@@ -37,6 +41,8 @@ public class Manager : MonoBehaviour
 
     private void Awake()
     {
+        UpLevel += new OnLevelUp(LevelUpBots);
+        Info.CharmLevel = 0;
         //test
         
         //endtest
@@ -46,7 +52,7 @@ public class Manager : MonoBehaviour
 
             //endgarbage
 
-            Player = GameObject.Find("Hero");
+        Player = GameObject.Find("Hero");
         MainGraph = new Graph();
     }
     
@@ -104,6 +110,20 @@ public class Manager : MonoBehaviour
             plane.Add(new Vector2(v.x, v.y));
         }
         return plane;
+    }
+    #endregion
+
+    #region LevelManagement
+    public void LevelUpBots()
+    {
+        Info.CharmLevel++;
+        foreach (Enemy enm in FindObjectsOfType<Enemy>())
+        {
+            if(enm.enemyLevel >= Info.CharmLevel)
+            {
+                enm.SetVisability(true);
+            }
+        }
     }
     #endregion
 }

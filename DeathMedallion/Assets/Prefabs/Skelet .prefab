@@ -2233,7 +2233,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 768
   bounds: []
-  enemyLevel: 0
+  enemyLevel: 1
+  pair: {fileID: 8684927064075317747, guid: aca7fedc77be78a4fac3f9cc2776751d, type: 3}
+  parts: {fileID: 151254152841599944}
   bodyParts:
   - {fileID: 0}
   - {fileID: 0}
@@ -2273,8 +2275,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDrag: 0.06
+  m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0

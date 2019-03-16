@@ -11,10 +11,12 @@ public class Spider : Enemy
     {
         base.__init__(speed, dmg);
         SetBounds(6);
+        Physics2D.IgnoreCollision(gameObject.GetComponent<BoxCollider2D>(), mng.Player.GetComponent<Collider2D>());
     }
     private void Start()
     {
         __init__(1.2f, 2);
+        enemyLevel = 0;
         Health = 4;
     }
     public override void Chasing()
@@ -90,6 +92,11 @@ public class Spider : Enemy
 
         var hit = Physics2D.Raycast(transform.Find("View Point ").transform.position, new Vector2(1, 1), 10f, layermask);
         return false;
+    }
+
+    public override void UpdateAnimator()
+    {
+        anim.SetFloat("velocityX", Mathf.Abs(rb.velocity.x));
     }
     #endregion
     #region Corutines

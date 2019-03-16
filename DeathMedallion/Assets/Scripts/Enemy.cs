@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Anima2D;
 
 
 public class Enemy: Unit
@@ -15,10 +16,15 @@ public class Enemy: Unit
     public delegate void AlarmCons();
     protected List<Vector2> Bounds;
     [SerializeField] public GameObject pair;
+    [SerializeField] Transform parts;
 
     private void Awake()
     {
-
+        if (enemyLevel > Info.CharmLevel)
+        {
+            SetVisability(false);
+        }
+        //Physics2D.IgnoreCollision(transform.Find("Collider").GetComponent<Collider2D>(), mng.Player.GetComponent<Collider2D>());
         Collider2D col = new Collider2D();
         Physics2D.IgnoreLayerCollision(10, 10);
         State patrolling = new State("patrolling", 1);
@@ -135,6 +141,19 @@ public class Enemy: Unit
     {
 
     }
+    public virtual void SetVisability(bool choice)
+    {
+        if (!parts) return;
+        byte alpha = choice ? (byte)255 : (byte)100;
+        if (parts)
+        {
+            foreach (Transform part in parts)
+            {
+                part.GetComponent<SpriteMeshInstance>().color = new Color32(255, 255, 255, alpha);
+            }
+        }
+        GetComponent<Collider2D>().enabled = choice;
+    }
     public virtual void Wandering()
     {
         FixWandering();
@@ -189,6 +208,8 @@ public class Enemy: Unit
 
     public virtual void Glance()
     {
+        if (Info.CharmLevel < enemyLevel) return;
+
         GameObject sighPoint = gameObject.transform.Find("View Point ").gameObject;
         int x = gameObject.transform.localScale.x > 0 ? -1 : 1;
         for (float y = -1; y < 1; y += 0.1f)

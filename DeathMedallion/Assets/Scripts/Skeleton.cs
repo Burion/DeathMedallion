@@ -23,6 +23,7 @@ public class Skeleton : Enemy
     void Initialize()
     {
         base.Start();
+        enemyLevel = 1;
         speed = 1.2f;
         target = new Vector2(mng.ChasePlayer(gameObject).x, mng.ChasePlayer(gameObject).y);
         SetBounds(6);

@@ -557,15 +557,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcedced020c255a41b6dac834495cf0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doubleJmp: 1
+  hitable: 0
+  mng: {fileID: 0}
   target: {x: 0, y: 0}
   speed: 0
   anim: {fileID: 0}
-  grounded: 0
+  isGrounded: 0
   ableToJump: 0
+  layermask:
+    serializedVersion: 2
+    m_Bits: 0
   bounds: []
   enemyLevel: 0
-  mng: {fileID: 0}
-  hitable: 0
+  pair: {fileID: 0}
 --- !u!1 &1834728328717760527
 GameObject:
   m_ObjectHideFlags: 0
