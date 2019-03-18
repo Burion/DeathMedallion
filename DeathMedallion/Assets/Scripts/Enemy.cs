@@ -5,6 +5,12 @@ using System;
 using Anima2D;
 
 
+public interface ILevelable
+{
+    int Level { get; set; }
+    void SetVisability(bool choice);
+}
+
 public class Enemy: Unit
 {
     public LayerMask layermask;
@@ -97,7 +103,6 @@ public class Enemy: Unit
                 break;
 
             case (int)States.death:
-
                 break;
 
         }

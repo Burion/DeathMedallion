@@ -9,7 +9,6 @@ public class groundweb : MonoBehaviour
         if (col.CompareTag("Player"))
         {
             col.GetComponent<Unit>().speed =  col.GetComponent<Unit>().spdmng.ChangeSpeed(-3f);
-            Debug.Log(col.GetComponent<Unit>().spdmng.RevertSpeed());
         }
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //2 ot
-public class Skeleton : Enemy
+public class Skeleton : Enemy, ILevelable
 {
     //1 ot
     public delegate void ReachPlayer();
@@ -13,7 +13,9 @@ public class Skeleton : Enemy
     //Death Objects
     [SerializeField] List<GameObject> bodyParts;
     [SerializeField] List<GameObject> deadBodyParts;
-    
+
+    public int Level { get; set; } 
+
     void Start()
     {
         Initialize();
@@ -23,7 +25,7 @@ public class Skeleton : Enemy
     void Initialize()
     {
         base.Start();
-        enemyLevel = 1;
+        Level = 1;
         speed = 1.2f;
         target = new Vector2(mng.ChasePlayer(gameObject).x, mng.ChasePlayer(gameObject).y);
         SetBounds(6);
@@ -209,7 +211,6 @@ public class Skeleton : Enemy
         {
             if (playerPos == pos)
             {
-                Debug.Log("Near");
                 return true;
             }
         }
@@ -272,7 +273,6 @@ public class Skeleton : Enemy
     {
         anim.SetBool("attacking", true);
         yield return new WaitForSeconds(1);
-        Debug.Log("Hit!");
         anim.SetBool("attacking", false);
         yield return new WaitForSeconds(1);
         CheckCombatState();

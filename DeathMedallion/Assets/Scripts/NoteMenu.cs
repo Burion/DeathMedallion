@@ -24,7 +24,6 @@ public class NoteMenu : Menu, IMenu
 
     private void Update()
     {
-        Debug.Log(Input.GetAxisRaw("UpDown"));
         CheckForPressing();
     }
 
@@ -80,8 +79,6 @@ public class NoteMenu : Menu, IMenu
             scrollView.transform.GetChild(i).GetComponent<Image>().color = new Color32(255, 255, 255, 255);
         }
         scrollView.transform.GetChild(choice).GetComponent<Image>().color = new Color32(255, 255, 100, 255);
-        Debug.Log("OnNoteChange");
-        //StartCoroutine("Blink");
         
     }
     IEnumerator Blink()

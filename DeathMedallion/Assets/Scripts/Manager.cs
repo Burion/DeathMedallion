@@ -117,11 +117,12 @@ public class Manager : MonoBehaviour
     public void LevelUpBots()
     {
         Info.CharmLevel++;
-        foreach (Enemy enm in FindObjectsOfType<Enemy>())
+        foreach (GameObject enm in FindObjectsOfType<GameObject>())
         {
-            if(enm.enemyLevel >= Info.CharmLevel)
+            if (enm.GetComponent<ILevelable>() == null) continue;
+            if(enm.GetComponent<ILevelable>().Level >= Info.CharmLevel)
             {
-                enm.SetVisability(true);
+                enm.GetComponent<ILevelable>().SetVisability(true);
             }
         }
     }

@@ -2,54 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rune : MonoBehaviour
+public class Rune : Interactable
 {
-    public delegate void OnInteract();
-    public event OnInteract Interacted;
-    Manager mng;
+    //!!! TODO make this class more OOP
+
     public GameObject CanvasAlert;
-    private void OnEnable()
+    Color32 activatedColor;
+    public override void OnEnable()
     {
-        mng = GameObject.Find("Manager").GetComponent<Manager>();
+        base.OnEnable();
+        IsOneTimeInteraction = true;
+        activatedColor = new Color32(255, 16, 0, 255);
         Interacted += new OnInteract(mng.LevelUpBots);
         Interacted += new OnInteract(RedRune);
         Interacted += new OnInteract(ShowAlert);
     }
     private void Start()
     {
-        transform.Find("Alert").gameObject.SetActive(false);
+        transform.Find("Message").gameObject.SetActive(false);
     }
-    public void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.CompareTag("Player"))
-        {
-            transform.Find("Alert").gameObject.SetActive(true);
-        }
-    }
+    
 
     void RedRune()
     {
-        GetComponentInChildren<SpriteRenderer>().color = new Color32(255, 16, 0, 255);
+        GetComponentInChildren<SpriteRenderer>().color = activatedColor;
+        transform.Find("Message").gameObject.SetActive(false);
     }
     void ShowAlert()
     {
         CanvasAlert.SetActive(true);
-    }
-    public void OnTriggerExit2D(Collider2D col)
-    {
-        if (col.CompareTag("Player"))
-        {
-            transform.Find("Alert").gameObject.SetActive(false);
-        }
-    }
-    private void OnTriggerStay2D(Collider2D col)
-    {
-        if (col.CompareTag("Player"))
-        {
-            if (Input.GetButtonDown("Interact"))
-            {
-                Interacted();
-            }
-        }
     }
 }

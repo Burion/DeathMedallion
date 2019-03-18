@@ -8,6 +8,7 @@ public class Player : Unit {
     public bool godMode = false;
     float jumptimer;
     float currentjumptime;
+    bool canHit = true;
     [SerializeField] SpriteMeshInstance eyes;
     [SerializeField] SpriteRenderer sword;
 
@@ -67,7 +68,9 @@ public class Player : Unit {
         
         if (Input.GetButtonDown("Attack"))
         {
+            if (!canHit) return;
             anim.SetTrigger("attack");
+            StartCoroutine(BlockHit(0.3f)); // TODO decision about time block
         }
          
     }
@@ -126,6 +129,12 @@ public class Player : Unit {
             yield return new WaitForSeconds(interval);
             time -= interval * 2;
         }
+    }
+    IEnumerator BlockHit(float time)
+    {
+        canHit = false;
+        yield return new WaitForSeconds(time);
+        canHit = true;
     }
     #endregion
 }
