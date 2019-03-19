@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.0000017
+  m_Length: 1.0000004
   m_ChildTransform: {fileID: 151254153474880756}
   m_AttachedIK: {fileID: 0}
 --- !u!1 &151254151883287988
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.5400007
+  m_Length: 0.54000056
   m_ChildTransform: {fileID: 151254152753801207}
   m_AttachedIK: {fileID: 0}
 --- !u!1 &151254152157605758
@@ -741,6 +741,7 @@ GameObject:
   m_Component:
   - component: {fileID: 151254152277570573}
   - component: {fileID: 151254152277570578}
+  - component: {fileID: 2835781478428962020}
   m_Layer: 0
   m_Name: sabre
   m_TagString: Untagged
@@ -811,6 +812,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &2835781478428962020
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151254152277570572}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.17, y: 0.6}
+    newSize: {x: 2.17, y: 0.6}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.17, y: 0.6}
+  m_EdgeRadius: 0
 --- !u!1 &151254152308670951
 GameObject:
   m_ObjectHideFlags: 0
@@ -1372,7 +1399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.9537033
+  m_Length: 0.95370305
   m_ChildTransform: {fileID: 151254152449435723}
   m_AttachedIK: {fileID: 0}
 --- !u!1 &151254152704512995
@@ -1522,7 +1549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.38000038
+  m_Length: 0.38000032
   m_ChildTransform: {fileID: 151254152426723952}
   m_AttachedIK: {fileID: 0}
 --- !u!1 &151254152804469865
@@ -1570,7 +1597,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.0000001
+  m_Length: 0.9999998
   m_ChildTransform: {fileID: 151254152171124513}
   m_AttachedIK: {fileID: 0}
 --- !u!1 &151254152811822717
@@ -1724,7 +1751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.0000018
+  m_Length: 0.99999917
   m_ChildTransform: {fileID: 151254151844906419}
   m_AttachedIK: {fileID: 0}
 --- !u!1 &151254152835389829
@@ -2120,7 +2147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.38000074
+  m_Length: 0.38000065
   m_ChildTransform: {fileID: 151254153286797665}
   m_AttachedIK: {fileID: 0}
 --- !u!1 &151254153107276731
@@ -2401,7 +2428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.53999996
+  m_Length: 0.5400008
   m_ChildTransform: {fileID: 151254153089549647}
   m_AttachedIK: {fileID: 0}
 --- !u!1 &151254153474880759
@@ -2735,6 +2762,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6239872436782861211}
   - component: {fileID: 3968481848389308466}
+  - component: {fileID: 8930055143380600498}
   m_Layer: 0
   m_Name: trigger
   m_TagString: Untagged
@@ -2782,3 +2810,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &8930055143380600498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6220861735690315895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4686f4dcad074da42b2b3e4ff4a5c437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -13,7 +13,7 @@ public class Manager : MonoBehaviour
     public GameObject Pause;
     Graph MainGraph;
     public GameObject Player;
-
+    [SerializeField] GameObject YouDied;
 
     public void Update()
     {
@@ -114,6 +114,10 @@ public class Manager : MonoBehaviour
     #endregion
 
     #region LevelManagement
+    public void OnDie()
+    {
+        YouDied.SetActive(true);
+    }
     public void LevelUpBots()
     {
         Info.CharmLevel++;

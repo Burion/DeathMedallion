@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : Unit {
 
@@ -11,18 +12,30 @@ public class Player : Unit {
     bool canHit = true;
     [SerializeField] SpriteMeshInstance eyes;
     [SerializeField] SpriteRenderer sword;
+    public Transform healthTransform;
+
 
     void Start () {
 
         base.Start();
         base.__init__(4f, 4);
-
+        Health = 5;
+        OnHealthChange += new Dying(SetHearthCount);
         jumptimer = 1f;
         Damage = 1;
+        hitable = true;
 
 	}
-	
 
+    public override void DeathState()
+    {
+        if (Health <= 0)
+        {
+            base.DeathState();
+            Info.IsGameOn = false;
+            mng.OnDie();
+        }
+    }
 	void Update () {
 
         if (Info.IsGameOn)
@@ -43,6 +56,12 @@ public class Player : Unit {
 
     void CheckMove()
     {
+        ////
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Health--;
+        }
+        ///
         if (Input.GetAxisRaw("Horizontal") == -1)
         {
             Move(-1, speed);
@@ -76,6 +95,7 @@ public class Player : Unit {
     }
     public override void GotHit()
     {
+        if (!hitable) return;
         base.GotHit();
         StartCoroutine(StayUnhittable(2f));
     }
@@ -98,9 +118,24 @@ public class Player : Unit {
             Health = int.MaxValue;
         }
     }
+    void SetHearthCount()
+    {
+        Debug.Log(Health);
+        Color32 filled = new Color32(255, 255, 255, 255);
+        Color32 empty = new Color32(87, 87, 87, 53);
+        int toSet;
+        if (Health > healthTransform.childCount) toSet = healthTransform.childCount;
+        else
+            toSet = Health;
+        for(int i = 0; i < healthTransform.childCount; i++)
+        {
+            healthTransform.GetChild(i).GetComponent<Image>().color = i < toSet ? filled : empty;
+        }
+    }
     #region Corutines
     IEnumerator StayUnhittable(float time)
     {
+        hitable = false;
         float interval = 0.3f;
         var body = transform.Find("Model").Find("Sprite Meshes");
         List<SpriteMeshInstance> bodyparts = new List<SpriteMeshInstance>();
@@ -129,6 +164,7 @@ public class Player : Unit {
             yield return new WaitForSeconds(interval);
             time -= interval * 2;
         }
+        hitable = true;
     }
     IEnumerator BlockHit(float time)
     {

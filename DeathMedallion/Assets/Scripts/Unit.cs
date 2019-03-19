@@ -64,7 +64,7 @@ public class Unit : MonoBehaviour {
         ableToJump = true;
         spdmng = new SpeedManager(speed);
     }
-    void DeathState()
+    public virtual void DeathState()
     {
         if (Health <= 0)
         {
